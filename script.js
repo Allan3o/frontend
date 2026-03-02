@@ -1,29 +1,38 @@
-function calcularTotal() {
+document.addEventListener('DOMContentLoaded', function () {
 
-    // Seleciona todos os checkboxes e quantidades
-    const checkboxes = document.querySelectorAll('.item-produto');
-    const quantidades = document.querySelectorAll('.qtd-produto');
+    function calcularTotal() {
 
-    let total = 0;
+        const checkboxes = document.querySelectorAll('.item-produto');
+        const quantidades = document.querySelectorAll('.qtd-produto');
 
-    // Percorre todos os produtos
-    checkboxes.forEach((checkbox, index) => {
+        let total = 0;
 
-        if (checkbox.checked) {
+        checkboxes.forEach((checkbox, index) => {
 
-            const preco = parseFloat(checkbox.value);
-            const qtd = parseInt(quantidades[index].value);
+            if (checkbox.checked) {
 
-            total += preco * qtd;
-        }
+                const preco = parseFloat(checkbox.value);
+                const qtd = parseInt(quantidades[index].value) || 0;
 
+                total += preco * qtd;
+            }
+
+        });
+
+        const campoTotal = document.getElementById('valor-total');
+
+        campoTotal.textContent = total.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    const elementos = document.querySelectorAll('.item-produto, .qtd-produto');
+
+    elementos.forEach(elemento => {
+        elemento.addEventListener('change', calcularTotal);
     });
 
-    // Atualiza o valor total na tela
-    const campoTotal = document.getElementById('valor-total');
-    campoTotal.textContent = total.toLocaleString('pt-BR', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
+    calcularTotal();
 
-}
+});
