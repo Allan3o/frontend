@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produtos - Minha Loja</title>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg bg-light shadow-sm">
   <div class="container">
     <a class="navbar-brand fw-bold" href="index.html">Minha Loja</a>
@@ -31,86 +29,66 @@
   </div>
 </nav>
 
-<!-- Conteúdo -->
 <div class="container mt-5">
 
     <h1 class="text-center mb-4">Lista de Produtos</h1>
 
     <div class="row">
 
-        <!-- Produto 1 -->
         <div class="col-md-4 mb-4">
-            <div class="card p-3 shadow h-100">
-                <h5 class="card-title">Produto 1</h5>
-                <p>Preço: R$ 100,00</p>
-
-                <div class="form-check">
-                    <input class="form-check-input item-produto" 
-                           type="checkbox" 
-                           value="100">
-                    <label class="form-check-label">Selecionar</label>
+            <div class="card shadow h-100">
+                <img src="https://picsum.photos/300/200?random=1" class="card-img-top" alt="Produto 1">
+                <div class="card-body">
+                    <h5 class="card-title">Produto 1</h5>
+                    <p>Preço: R$ 100,00</p>
+                    <div class="form-check">
+                        <input class="form-check-input item-produto" type="checkbox" value="100">
+                        <label class="form-check-label">Selecionar</label>
+                    </div>
+                    <input type="number" class="form-control mt-2 qtd-produto" value="1" min="1">
                 </div>
-
-                <input type="number" 
-                       class="form-control mt-2 qtd-produto" 
-                       value="1" 
-                       min="1">
             </div>
         </div>
 
-        <!-- Produto 2 -->
         <div class="col-md-4 mb-4">
-            <div class="card p-3 shadow h-100">
-                <h5 class="card-title">Produto 2</h5>
-                <p>Preço: R$ 200,00</p>
-
-                <div class="form-check">
-                    <input class="form-check-input item-produto" 
-                           type="checkbox" 
-                           value="200">
-                    <label class="form-check-label">Selecionar</label>
+            <div class="card shadow h-100">
+                <img src="https://picsum.photos/300/200?random=2" class="card-img-top" alt="Produto 2">
+                <div class="card-body">
+                    <h5 class="card-title">Produto 2</h5>
+                    <p>Preço: R$ 200,00</p>
+                    <div class="form-check">
+                        <input class="form-check-input item-produto" type="checkbox" value="200">
+                        <label class="form-check-label">Selecionar</label>
+                    </div>
+                    <input type="number" class="form-control mt-2 qtd-produto" value="1" min="1">
                 </div>
-
-                <input type="number" 
-                       class="form-control mt-2 qtd-produto" 
-                       value="1" 
-                       min="1">
             </div>
         </div>
 
-        <!-- Produto 3 -->
         <div class="col-md-4 mb-4">
-            <div class="card p-3 shadow h-100">
-                <h5 class="card-title">Produto 3</h5>
-                <p>Preço: R$ 300,00</p>
-
-                <div class="form-check">
-                    <input class="form-check-input item-produto" 
-                           type="checkbox" 
-                           value="300">
-                    <label class="form-check-label">Selecionar</label>
+            <div class="card shadow h-100">
+                <img src="https://picsum.photos/300/200?random=3" class="card-img-top" alt="Produto 3">
+                <div class="card-body">
+                    <h5 class="card-title">Produto 3</h5>
+                    <p>Preço: R$ 300,00</p>
+                    <div class="form-check">
+                        <input class="form-check-input item-produto" type="checkbox" value="300">
+                        <label class="form-check-label">Selecionar</label>
+                    </div>
+                    <input type="number" class="form-control mt-2 qtd-produto" value="1" min="1">
                 </div>
-
-                <input type="number" 
-                       class="form-control mt-2 qtd-produto" 
-                       value="1" 
-                       min="1">
             </div>
         </div>
 
     </div>
 
-    <!-- Total -->
     <div class="alert alert-info text-center fs-4 mt-4">
         Valor Total: R$ <span id="valor-total">0,00</span>
     </div>
 
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Script do projeto -->
 <script src="script.js"></script>
 
 </body>
