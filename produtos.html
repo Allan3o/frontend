@@ -35,6 +35,7 @@
 
     <div class="row">
 
+        <!-- Produto 1 -->
         <div class="col-md-4 mb-4">
             <div class="card shadow h-100">
                 <img src="https://picsum.photos/300/200?random=1" class="card-img-top" alt="Produto 1">
@@ -42,14 +43,15 @@
                     <h5 class="card-title">Produto 1</h5>
                     <p>Preço: R$ 100,00</p>
                     <div class="form-check">
-                        <input class="form-check-input item-produto" type="checkbox" value="100">
-                        <label class="form-check-label">Selecionar</label>
+                        <input class="form-check-input item-produto" type="checkbox" value="100" id="produto1">
+                        <label class="form-check-label" for="produto1">Selecionar</label>
                     </div>
                     <input type="number" class="form-control mt-2 qtd-produto" value="1" min="1">
                 </div>
             </div>
         </div>
 
+        <!-- Produto 2 -->
         <div class="col-md-4 mb-4">
             <div class="card shadow h-100">
                 <img src="https://picsum.photos/300/200?random=2" class="card-img-top" alt="Produto 2">
@@ -57,14 +59,15 @@
                     <h5 class="card-title">Produto 2</h5>
                     <p>Preço: R$ 200,00</p>
                     <div class="form-check">
-                        <input class="form-check-input item-produto" type="checkbox" value="200">
-                        <label class="form-check-label">Selecionar</label>
+                        <input class="form-check-input item-produto" type="checkbox" value="200" id="produto2">
+                        <label class="form-check-label" for="produto2">Selecionar</label>
                     </div>
                     <input type="number" class="form-control mt-2 qtd-produto" value="1" min="1">
                 </div>
             </div>
         </div>
 
+        <!-- Produto 3 -->
         <div class="col-md-4 mb-4">
             <div class="card shadow h-100">
                 <img src="https://picsum.photos/300/200?random=3" class="card-img-top" alt="Produto 3">
@@ -72,8 +75,8 @@
                     <h5 class="card-title">Produto 3</h5>
                     <p>Preço: R$ 300,00</p>
                     <div class="form-check">
-                        <input class="form-check-input item-produto" type="checkbox" value="300">
-                        <label class="form-check-label">Selecionar</label>
+                        <input class="form-check-input item-produto" type="checkbox" value="300" id="produto3">
+                        <label class="form-check-label" for="produto3">Selecionar</label>
                     </div>
                     <input type="number" class="form-control mt-2 qtd-produto" value="1" min="1">
                 </div>
@@ -82,6 +85,7 @@
 
     </div>
 
+    <!-- Total -->
     <div class="alert alert-info text-center fs-4 mt-4">
         Valor Total: R$ <span id="valor-total">0,00</span>
     </div>
