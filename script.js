@@ -1,9 +1,37 @@
-document.addEventListener('DOMContentLoaded', function () {
+function formatarMoeda(valor){
+return valor.toLocaleString("pt-BR",{
+style:"currency",
+currency:"BRL"
+});
+}
+
+let itemParaRemover = null;
+
+document.addEventListener("DOMContentLoaded", function(){
+
+const itens = document.querySelectorAll(".item-produto, .qtd-produto");
+
+itens.forEach(el=>{
+el.addEventListener("change", calcularTotal);
+});
+
+mostrarCarrinho();
+calcularTotal();
+
+const botaoConfirmar = document.getElementById("confirmarRemover");
+
+if(botaoConfirmar){
+botaoConfirmar.addEventListener("click", confirmarRemocao);
+}
+
+carregarDepoimentos();
+
+});
 
 function calcularTotal(){
 
-const checkboxes = document.querySelectorAll('.item-produto');
-const quantidades = document.querySelectorAll('.qtd-produto');
+const checkboxes = document.querySelectorAll(".item-produto");
+const quantidades = document.querySelectorAll(".qtd-produto");
 
 let total = 0;
 
@@ -11,8 +39,8 @@ checkboxes.forEach((checkbox,index)=>{
 
 if(checkbox.checked){
 
-const preco = parseFloat(checkbox.value);
-const qtd = parseInt(quantidades[index].value) || 0;
+let preco = parseFloat(checkbox.value);
+let qtd = parseInt(quantidades[index].value) || 0;
 
 total += preco * qtd;
 
@@ -23,25 +51,16 @@ total += preco * qtd;
 const campoTotal = document.getElementById("valor-total");
 
 if(campoTotal){
-campoTotal.textContent =
-total.toLocaleString('pt-BR',{minimumFractionDigits:2});
+campoTotal.innerText = formatarMoeda(total);
 }
 
 }
-
-document.querySelectorAll('.item-produto, .qtd-produto')
-.forEach(el => el.addEventListener("change", calcularTotal));
-
-calcularTotal();
-mostrarCarrinho();
-carregarDepoimentos();  
-});
 
 function efetivarCompra(){
 
-const checkboxes = document.querySelectorAll('.item-produto');
-const quantidades = document.querySelectorAll('.qtd-produto');
-const nomes = document.querySelectorAll('.card-title');
+const checkboxes = document.querySelectorAll(".item-produto");
+const quantidades = document.querySelectorAll(".qtd-produto");
+const nomes = document.querySelectorAll(".card-title");
 
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
@@ -49,13 +68,21 @@ checkboxes.forEach((checkbox,index)=>{
 
 if(checkbox.checked){
 
-let produto = {
-nome: nomes[index].innerText,
-preco: parseFloat(checkbox.value),
-qtd: parseInt(quantidades[index].value)
-};
+let nome = nomes[index].innerText;
+let preco = parseFloat(checkbox.value);
+let qtd = parseInt(quantidades[index].value);
 
-carrinho.push(produto);
+let produtoExistente = carrinho.find(p => p.nome === nome);
+
+if(produtoExistente){
+produtoExistente.qtd = qtd;
+}else{
+carrinho.push({
+nome:nome,
+preco:preco,
+qtd:qtd
+});
+}
 
 }
 
@@ -71,13 +98,13 @@ function mostrarCarrinho(){
 
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
-let tabela = document.getElementById("lista-carrinhos");
+let tabela = document.getElementById("lista-carrinho");
 
 if(!tabela) return;
 
-let total = 0;
-
 tabela.innerHTML = "";
+
+let total = 0;
 
 carrinho.forEach((produto,index)=>{
 
@@ -88,11 +115,11 @@ total += subtotal;
 tabela.innerHTML += `
 <tr>
 <td>${produto.nome}</td>
-<td>R$ ${produto.preco}</td>
+<td>${formatarMoeda(produto.preco)}</td>
 <td>${produto.qtd}</td>
-<td>R$ ${subtotal}</td>
+<td>${formatarMoeda(subtotal)}</td>
 <td>
-<button class="btn btn-danger btn-sm" onclick="removerItem(${index})">
+<button class="btn btn-danger btn-sm" onclick="abrirConfirmacao(${index})">
 Remover
 </button>
 </td>
@@ -104,49 +131,89 @@ Remover
 const totalCarrinho = document.getElementById("total-carrinho");
 
 if(totalCarrinho){
-totalCarrinho.innerText =
-total.toLocaleString('pt-BR',{minimumFractionDigits:2});
+totalCarrinho.innerText = formatarMoeda(total);
 }
 
 }
 
-function removerItem(index){
+function abrirConfirmacao(index){
+
+itemParaRemover = index;
+
+const modalElemento = document.getElementById("confirmarRemocao");
+
+if(modalElemento){
+
+let modal = new bootstrap.Modal(modalElemento);
+
+modal.show();
+
+}
+
+}
+
+function confirmarRemocao(){
 
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
-carrinho.splice(index,1);
+if(itemParaRemover !== null){
+
+carrinho.splice(itemParaRemover,1);
+
+}
 
 localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
 mostrarCarrinho();
 
+const modalElemento = document.getElementById("confirmarRemocao");
+
+if(modalElemento){
+
+let modal = bootstrap.Modal.getInstance(modalElemento);
+
+if(modal){
+modal.hide();
+}
+
+}
+
 }
 
 async function carregarDepoimentos(){
+
+try{
 
 const resposta = await fetch("https://jsonplaceholder.typicode.com/comments?_limit=3");
 
 const dados = await resposta.json();
 
-const lista = document.getElementById("lista-depoimentos");
+const container = document.getElementById("lista-depoimentos");
 
-if(!lista) return;
+if(!container) return;
 
-dados.forEach(depoimento => {
+container.innerHTML = "";
 
-lista.innerHTML += `
-<div class="col-md-4">
-<div class="card mb-3">
+dados.forEach(item => {
+
+container.innerHTML += `
+<div class="col-md-4 mb-4">
+<div class="card shadow h-100">
 <div class="card-body">
-
-<h5 class="card-title">${depoimento.name}</h5>
-<p class="card-text">${depoimento.body}</p>
-
+<h5 class="card-title">${item.name}</h5>
+<h6 class="text-muted">${item.email}</h6>
+<p class="card-text">${item.body}</p>
 </div>
 </div>
 </div>
 `;
 
 });
+
+}catch(erro){
+
+console.log("Erro ao carregar depoimentos", erro);
+
+}
 
 }
