@@ -1,32 +1,4 @@
-function formatarMoeda(valor){
-return valor.toLocaleString("pt-BR",{
-style:"currency",
-currency:"BRL"
-});
-}
-
-let itemParaRemover = null;
-
-document.addEventListener("DOMContentLoaded", function(){
-
-const itens = document.querySelectorAll(".item-produto, .qtd-produto");
-
-itens.forEach(el=>{
-el.addEventListener("change", calcularTotal);
-});
-
-mostrarCarrinho();
-calcularTotal();
-
-const botaoConfirmar = document.getElementById("confirmarRemover");
-
-if(botaoConfirmar){
-botaoConfirmar.addEventListener("click", confirmarRemocao);
-}
-
-carregarDepoimentos();
-
-});
+document.addEventListener('DOMContentLoaded', function () {
 
 function calcularTotal(){
 
@@ -56,6 +28,14 @@ campoTotal.innerText = formatarMoeda(total);
 
 }
 
+document.querySelectorAll('.item-produto, .qtd-produto')
+.forEach(el => el.addEventListener("change", calcularTotal));
+
+calcularTotal();
+mostrarCarrinho();
+carregarDepoimentos();  
+});
+
 function efetivarCompra(){
 
 const checkboxes = document.querySelectorAll(".item-produto");
@@ -68,21 +48,13 @@ checkboxes.forEach((checkbox,index)=>{
 
 if(checkbox.checked){
 
-let nome = nomes[index].innerText;
-let preco = parseFloat(checkbox.value);
-let qtd = parseInt(quantidades[index].value);
+let produto = {
+nome: nomes[index].innerText,
+preco: parseFloat(checkbox.value),
+qtd: parseInt(quantidades[index].value)
+};
 
-let produtoExistente = carrinho.find(p => p.nome === nome);
-
-if(produtoExistente){
-produtoExistente.qtd = qtd;
-}else{
-carrinho.push({
-nome:nome,
-preco:preco,
-qtd:qtd
-});
-}
+carrinho.push(produto);
 
 }
 
@@ -115,9 +87,9 @@ total += subtotal;
 tabela.innerHTML += `
 <tr>
 <td>${produto.nome}</td>
-<td>${formatarMoeda(produto.preco)}</td>
+<td>R$ ${produto.preco}</td>
 <td>${produto.qtd}</td>
-<td>${formatarMoeda(subtotal)}</td>
+<td>R$ ${subtotal}</td>
 <td>
 <button class="btn btn-danger btn-sm" onclick="abrirConfirmacao(${index})">
 Remover
@@ -136,23 +108,7 @@ totalCarrinho.innerText = formatarMoeda(total);
 
 }
 
-function abrirConfirmacao(index){
-
-itemParaRemover = index;
-
-const modalElemento = document.getElementById("confirmarRemocao");
-
-if(modalElemento){
-
-let modal = new bootstrap.Modal(modalElemento);
-
-modal.show();
-
-}
-
-}
-
-function confirmarRemocao(){
+function removerItem(index){
 
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
@@ -166,18 +122,6 @@ localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
 mostrarCarrinho();
 
-const modalElemento = document.getElementById("confirmarRemocao");
-
-if(modalElemento){
-
-let modal = bootstrap.Modal.getInstance(modalElemento);
-
-if(modal){
-modal.hide();
-}
-
-}
-
 }
 
 async function carregarDepoimentos(){
@@ -190,9 +134,7 @@ const dados = await resposta.json();
 
 const container = document.getElementById("lista-depoimentos");
 
-if(!container) return;
-
-container.innerHTML = "";
+if(!lista) return;
 
 dados.forEach(item => {
 
