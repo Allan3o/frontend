@@ -33,9 +33,8 @@ document.querySelectorAll('.item-produto, .qtd-produto')
 .forEach(el => el.addEventListener("change", calcularTotal));
 
 calcularTotal();
-
 mostrarCarrinho();
-
+carregarDepoimentos(); 
 });
 
 function efetivarCompra(){
@@ -120,5 +119,34 @@ carrinho.splice(index,1);
 localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
 mostrarCarrinho();
+
+}
+
+async function carregarDepoimentos(){
+
+const resposta = await fetch("https://jsonplaceholder.typicode.com/comments?_limit=3");
+
+const dados = await resposta.json();
+
+const lista = document.getElementById("lista-depoimentos");
+
+if(!lista) return;
+
+dados.forEach(depoimento => {
+
+lista.innerHTML += `
+<div class="col-md-4">
+<div class="card mb-3">
+<div class="card-body">
+
+<h5 class="card-title">${depoimento.name}</h5>
+<p class="card-text">${depoimento.body}</p>
+
+</div>
+</div>
+</div>
+`;
+
+});
 
 }
