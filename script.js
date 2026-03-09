@@ -34,7 +34,7 @@ document.querySelectorAll('.item-produto, .qtd-produto')
 
 calcularTotal();
 mostrarCarrinho();
-carregarDepoimentos(); 
+carregarDepoimentos();  
 });
 
 function efetivarCompra(){
@@ -71,7 +71,7 @@ function mostrarCarrinho(){
 
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
-let tabela = document.getElementById("lista-carrinho");
+let tabela = document.getElementById("lista-carrinhos");
 
 if(!tabela) return;
 
