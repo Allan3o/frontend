@@ -1,3 +1,5 @@
+let itemParaRemover = null;
+
 document.addEventListener('DOMContentLoaded', function () {
 
 function calcularTotal(){
@@ -34,7 +36,14 @@ document.querySelectorAll('.item-produto, .qtd-produto')
 
 calcularTotal();
 mostrarCarrinho();
-carregarDepoimentos();  
+carregarDepoimentos();
+
+const btnConfirmar = document.getElementById("confirmarRemover");
+
+if(btnConfirmar){
+btnConfirmar.addEventListener("click", confirmarRemocao);
+}
+
 });
 
 function efetivarCompra(){
@@ -49,13 +58,25 @@ checkboxes.forEach((checkbox,index)=>{
 
 if(checkbox.checked){
 
-let produto = {
-nome: nomes[index].innerText,
-preco: parseFloat(checkbox.value),
-qtd: parseInt(quantidades[index].value)
-};
+let nome = nomes[index].innerText;
+let preco = parseFloat(checkbox.value);
+let qtd = parseInt(quantidades[index].value);
 
-carrinho.push(produto);
+let produtoExistente = carrinho.find(p => p.nome === nome);
+
+if(produtoExistente){
+
+produtoExistente.qtd += qtd;
+
+}else{
+
+carrinho.push({
+nome: nome,
+preco: preco,
+qtd: qtd
+});
+
+}
 
 }
 
@@ -71,7 +92,7 @@ function mostrarCarrinho(){
 
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
-let tabela = document.getElementById("lista-carrinhos");
+let tabela = document.getElementById("lista-carrinho");
 
 if(!tabela) return;
 
@@ -88,11 +109,11 @@ total += subtotal;
 tabela.innerHTML += `
 <tr>
 <td>${produto.nome}</td>
-<td>R$ ${produto.preco}</td>
+<td>R$ ${produto.preco.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
 <td>${produto.qtd}</td>
-<td>R$ ${subtotal}</td>
+<td>R$ ${subtotal.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
 <td>
-<button class="btn btn-danger btn-sm" onclick="removerItem(${index})">
+<button class="btn btn-danger btn-sm" onclick="abrirConfirmacao(${index})">
 Remover
 </button>
 </td>
@@ -110,15 +131,37 @@ total.toLocaleString('pt-BR',{minimumFractionDigits:2});
 
 }
 
-function removerItem(index){
+function abrirConfirmacao(index){
+
+itemParaRemover = index;
+
+const modal = new bootstrap.Modal(
+document.getElementById("confirmarRemocao")
+);
+
+modal.show();
+
+}
+
+function confirmarRemocao(){
 
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
-carrinho.splice(index,1);
+if(itemParaRemover !== null){
+
+carrinho.splice(itemParaRemover,1);
+
+}
 
 localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
 mostrarCarrinho();
+
+const modal = bootstrap.Modal.getInstance(
+document.getElementById("confirmarRemocao")
+);
+
+modal.hide();
 
 }
 
@@ -131,6 +174,8 @@ const dados = await resposta.json();
 const lista = document.getElementById("lista-depoimentos");
 
 if(!lista) return;
+
+lista.innerHTML = "";
 
 dados.forEach(depoimento => {
 
