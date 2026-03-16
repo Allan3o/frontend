@@ -1,18 +1,28 @@
-<<<<<<< HEAD
-=======
 let itemParaRemover = null;
 
-function formatarMoeda(valor){
-return valor.toLocaleString("pt-BR",{style:"currency", currency:"BRL"});
+document.addEventListener("DOMContentLoaded", () => {
+
+if(document.querySelector(".item-produto")){
+calcularTotal();
+
+document.querySelectorAll(".item-produto, .qtd-produto")
+.forEach(el => el.addEventListener("change", calcularTotal));
 }
 
->>>>>>> feature-depoimentos
-document.addEventListener('DOMContentLoaded', function () {
+mostrarCarrinho();
+carregarDepoimentos();
+iniciarFormulario();
+
+});
+
+function formatarMoeda(valor){
+return valor.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
 
 function calcularTotal(){
 
-const checkboxes = document.querySelectorAll('.item-produto');
-const quantidades = document.querySelectorAll('.qtd-produto');
+const checkboxes = document.querySelectorAll(".item-produto");
+const quantidades = document.querySelectorAll(".qtd-produto");
 
 let total = 0;
 
@@ -20,8 +30,8 @@ checkboxes.forEach((checkbox,index)=>{
 
 if(checkbox.checked){
 
-const preco = parseFloat(checkbox.value);
-const qtd = parseInt(quantidades[index].value) || 0;
+let preco = parseFloat(checkbox.value);
+let qtd = parseInt(quantidades[index].value) || 1;
 
 total += preco * qtd;
 
@@ -32,30 +42,16 @@ total += preco * qtd;
 const campoTotal = document.getElementById("valor-total");
 
 if(campoTotal){
-campoTotal.textContent =
-total.toLocaleString('pt-BR',{minimumFractionDigits:2});
+campoTotal.innerText = formatarMoeda(total);
 }
 
 }
-
-document.querySelectorAll('.item-produto, .qtd-produto')
-.forEach(el => el.addEventListener("change", calcularTotal));
-
-calcularTotal();
-mostrarCarrinho();
-<<<<<<< HEAD
-carregarDepoimentos();  
-=======
-carregarDepoimentos();
-
->>>>>>> feature-depoimentos
-});
 
 function efetivarCompra(){
 
-const checkboxes = document.querySelectorAll('.item-produto');
-const quantidades = document.querySelectorAll('.qtd-produto');
-const nomes = document.querySelectorAll('.card-title');
+const checkboxes = document.querySelectorAll(".item-produto");
+const quantidades = document.querySelectorAll(".qtd-produto");
+const nomes = document.querySelectorAll(".card-title");
 
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
@@ -63,38 +59,23 @@ checkboxes.forEach((checkbox,index)=>{
 
 if(checkbox.checked){
 
-<<<<<<< HEAD
-let produto = {
-nome: nomes[index].innerText,
-preco: parseFloat(checkbox.value),
-qtd: parseInt(quantidades[index].value)
-};
-
-carrinho.push(produto);
-=======
 let nome = nomes[index].innerText;
 let preco = parseFloat(checkbox.value);
-let qtd = parseInt(quantidades[index].value);
+let qtd = parseInt(quantidades[index].value) || 1;
 
 let existente = carrinho.find(p => p.nome === nome);
 
 if(existente){
 existente.qtd += qtd;
 }else{
-carrinho.push({
-nome: nome,
-preco: preco,
-qtd: qtd
-});
+carrinho.push({nome,preco,qtd});
 }
->>>>>>> feature-depoimentos
 
 }
 
 });
 
 localStorage.setItem("carrinho", JSON.stringify(carrinho));
-
 mostrarCarrinho();
 
 }
@@ -102,30 +83,25 @@ mostrarCarrinho();
 function mostrarCarrinho(){
 
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-
 let tabela = document.getElementById("lista-carrinho");
 
 if(!tabela) return;
-
-let total = 0;
 
 tabela.innerHTML = "";
 
 let total = 0;
 
->>>>>>> feature-depoimentos
 carrinho.forEach((produto,index)=>{
 
 let subtotal = produto.preco * produto.qtd;
-
 total += subtotal;
 
 tabela.innerHTML += `
 <tr>
 <td>${produto.nome}</td>
-<td>R$ ${produto.preco.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+<td>${formatarMoeda(produto.preco)}</td>
 <td>${produto.qtd}</td>
-<td>R$ ${subtotal.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+<td>${formatarMoeda(subtotal)}</td>
 <td>
 <button class="btn btn-danger btn-sm" onclick="removerItem(${index})">
 Remover
@@ -139,25 +115,12 @@ Remover
 const totalCarrinho = document.getElementById("total-carrinho");
 
 if(totalCarrinho){
-totalCarrinho.innerText =
-total.toLocaleString('pt-BR',{minimumFractionDigits:2});
+totalCarrinho.innerText = formatarMoeda(total);
 }
 
 }
 
-function abrirConfirmacao(index){
-
-itemParaRemover = index;
-
-const modal = new bootstrap.Modal(
-document.getElementById("confirmarRemocao")
-);
-
-modal.show();
-
-}
-
-function confirmarRemocao(){
+function removerItem(index){
 
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
@@ -167,31 +130,19 @@ localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
 mostrarCarrinho();
 
-const modal = bootstrap.Modal.getInstance(
-document.getElementById("confirmarRemocao")
-);
-
-modal.hide();
-
->>>>>>> feature-depoimentos
 }
 
 async function carregarDepoimentos(){
 
+const container = document.getElementById("lista-depoimentos");
+
+if(!container) return;
+
 try{
 
-<<<<<<< HEAD
-try{
-
-=======
->>>>>>> feature-depoimentos
 const resposta = await fetch("https://jsonplaceholder.typicode.com/comments?_limit=3");
 
 const dados = await resposta.json();
-
-const lista = document.getElementById("lista-depoimentos");
-
-if(!container) return;
 
 container.innerHTML = "";
 
@@ -201,10 +152,9 @@ container.innerHTML += `
 <div class="col-md-4 mb-4">
 <div class="card shadow h-100">
 <div class="card-body">
-
-<h5 class="card-title">${depoimento.name}</h5>
-<p class="card-text">${depoimento.body}</p>
-
+<h5 class="card-title">${item.name}</h5>
+<h6 class="text-muted">${item.email}</h6>
+<p class="card-text">${item.body}</p>
 </div>
 </div>
 </div>
@@ -218,13 +168,70 @@ console.log("Erro ao carregar depoimentos", erro);
 
 }
 
-<<<<<<< HEAD
-}catch(erro){
+}
 
-console.log("Erro ao carregar depoimentos", erro);
+function iniciarFormulario(){
+
+const form = document.getElementById("form-contato");
+
+if(!form) return;
+
+form.addEventListener("submit", async function(e){
+
+e.preventDefault();
+
+const nome = document.getElementById("nome").value;
+const email = document.getElementById("email").value;
+const mensagem = document.getElementById("mensagem").value;
+
+const dados = {nome,email,mensagem};
+
+try{
+
+const resposta = await fetch("https://jsonplaceholder.typicode.com/posts",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body: JSON.stringify(dados)
+});
+
+if(resposta.status === 201){
+
+mostrarAlerta("Mensagem enviada com sucesso!", "success");
+form.reset();
+
+}else{
+
+mostrarAlerta("Erro ao enviar mensagem", "danger");
 
 }
 
-=======
->>>>>>> feature-depoimentos
+}catch{
+
+mostrarAlerta("Falha na comunicação com servidor", "danger");
+
+}
+
+});
+
+}
+
+function mostrarAlerta(texto,tipo){
+
+const form = document.getElementById("form-contato");
+
+if(!form) return;
+
+const alerta = document.createElement("div");
+
+alerta.className = `alert alert-${tipo} mt-3`;
+alerta.innerText = texto;
+
+form.appendChild(alerta);
+
+setTimeout(()=>{
+alerta.remove();
+},4000);
+
 }
