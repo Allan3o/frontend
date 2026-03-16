@@ -1,3 +1,9 @@
+let itemParaRemover = null;
+
+function formatarMoeda(valor){
+return valor.toLocaleString("pt-BR",{style:"currency", currency:"BRL"});
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 
 function calcularTotal(){
@@ -33,7 +39,8 @@ document.querySelectorAll('.item-produto, .qtd-produto')
 
 calcularTotal();
 mostrarCarrinho();
-carregarDepoimentos();  
+carregarDepoimentos();
+
 });
 
 function efetivarCompra(){
@@ -48,19 +55,27 @@ checkboxes.forEach((checkbox,index)=>{
 
 if(checkbox.checked){
 
-let produto = {
-nome: nomes[index].innerText,
-preco: parseFloat(checkbox.value),
-qtd: parseInt(quantidades[index].value)
-};
+let nome = nomes[index].innerText;
+let preco = parseFloat(checkbox.value);
+let qtd = parseInt(quantidades[index].value);
 
-carrinho.push(produto);
+let existente = carrinho.find(p => p.nome === nome);
+
+if(existente){
+existente.qtd += qtd;
+}else{
+carrinho.push({
+nome: nome,
+preco: preco,
+qtd: qtd
+});
+}
 
 }
 
 });
 
-localStorage.setItem("carrinhos", JSON.stringify(carrinho));
+localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
 mostrarCarrinho();
 
@@ -87,11 +102,11 @@ total += subtotal;
 tabela.innerHTML += `
 <tr>
 <td>${produto.nome}</td>
-<td>R$ ${produto.preco}</td>
+<td>${formatarMoeda(produto.preco)}</td>
 <td>${produto.qtd}</td>
-<td>R$ ${subtotal}</td>
+<td>${formatarMoeda(subtotal)}</td>
 <td>
-<button class="btn btn-danger btn-sm" onclick="abrirConfirmacao(${index})">
+<button class="btn btn-danger btn-sm" onclick="removerItem(${index})">
 Remover
 </button>
 </td>
@@ -112,11 +127,7 @@ function removerItem(index){
 
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
-if(itemParaRemover !== null){
-
-carrinho.splice(itemParaRemover,1);
-
-}
+carrinho.splice(index,1);
 
 localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
@@ -134,7 +145,9 @@ const dados = await resposta.json();
 
 const container = document.getElementById("lista-depoimentos");
 
-if(!lista) return;
+if(!container) return;
+
+container.innerHTML = "";
 
 dados.forEach(item => {
 
