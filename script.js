@@ -60,7 +60,7 @@ carrinho.push(produto);
 
 });
 
-localStorage.setItem("carrinho", JSON.stringify(carrinho));
+localStorage.setItem("carrinhos", JSON.stringify(carrinho));
 
 mostrarCarrinho();
 
