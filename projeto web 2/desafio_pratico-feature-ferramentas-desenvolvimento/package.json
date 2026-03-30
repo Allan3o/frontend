@@ -4,6 +4,7 @@
   "description": "",
   "main": "script.js",
   "scripts": {
+    "prepare": "husky install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "format": "prettier --write ."
@@ -25,10 +26,11 @@
     "*.{js,html,css}": "prettier --write"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "eslint": "^10.1.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "globals": "^13.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
-    "prettier": "^3.8.1"
+    "prettier": "^3.0.0"
   }
 }
