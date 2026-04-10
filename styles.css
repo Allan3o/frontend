@@ -1,0 +1,17 @@
+.theme1 {
+  --bg: #fff;
+  --text: #000;
+}
+
+.theme2 {
+  --bg: #000;
+  --text: #fff;
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+/*# sourceMappingURL=styles.css.map */

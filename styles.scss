@@ -1,0 +1,22 @@
+$font-style: normal;
+$font-weight: 400;
+$font-color: #333;
+
+// Temas
+.theme1 {
+  --bg: #fff;
+  --text: #000;
+}
+
+.theme2 {
+  --bg: #000;
+  --text: #fff;
+}
+
+// Responsivo
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+}
+
